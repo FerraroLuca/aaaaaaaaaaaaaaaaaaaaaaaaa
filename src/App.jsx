@@ -11,8 +11,9 @@ console.log("Versione API caricata. Chiave presente:", !!API_KEY);
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 const model = genAI.getGenerativeModel({ 
-  model: "gemini-pro" 
-});
+  model: "gemini-1.5-flash" 
+}, { apiVersion: 'v1' });
+
 const Menu = ({ onStart }) => (
   <div className="flex flex-col items-center justify-center h-screen space-y-8 text-center p-6">
     <h1 className="text-6xl font-bold text-amber-500 fantasy-font drop-shadow-lg">AI Dungeon Master</h1>
@@ -54,24 +55,31 @@ export default function App() {
   const [chat, setChat] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const startGame = async () => {
-    setLoading(true);
-    setStatus('PLAYING');
-    try {
-      // NON usiamo systemInstruction qui, ma lo passiamo come primo messaggio
-      const newChat = model.startChat({ history: [] });
-      setChat(newChat);
-      
-      const promptIniziale = "Sei un Dungeon Master. Inizia l'avventura in una taverna. Sii breve ed epico in italiano.";
-      const result = await newChat.sendMessage(promptIniziale);
-      setMessages([{ role: "model", text: result.response.text() }]);
-    } catch (e) {
-      console.error(e);
-      setMessages([{ role: "model", text: "Errore di connessione. Verifica la chiave API su Netlify." }]);
-    } finally {
-      setLoading(false);
-    }
-  };
+const startGame = async () => {
+  setLoading(true);
+  setStatus('PLAYING');
+  try {
+    // Inizializziamo la chat
+    const newChat = model.startChat({
+      history: [],
+    });
+    setChat(newChat);
+
+    // Prompt diretto senza istruzioni di sistema complesse
+    const result = await newChat.sendMessage("Sei un Dungeon Master. Inizia l'avventura in una taverna. Parla in italiano.");
+    const response = await result.response;
+    const text = response.text();
+    
+    setMessages([{ role: "model", text: text }]);
+  } catch (e) {
+    console.error("ERRORE DETTAGLIATO:", e);
+    // Se fallisce ancora, proviamo il metodo 'vecchia scuola'
+    setMessages([{ role: "model", text: "Il portale magico è instabile. Sto ricalibrando..." }]);
+    handleEmergencyStart();
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleAction = async (text) => {
     setLoading(true);
