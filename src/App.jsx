@@ -3,18 +3,16 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // --- CONFIGURAZIONE AI ---
 const API_KEY = import.meta.env.VITE_GEMINI_KEY;
-
-// Log di controllo per il debug
-if (!API_KEY) {
-  console.error("ATTENZIONE: Chiave API mancante! Verifica le variabili d'ambiente su Netlify o il file .env");
-}
-
 const genAI = new GoogleGenerativeAI(API_KEY);
 
-// Configurazione del modello con forcing della versione v1 e istruzioni di sistema
+// Usiamo "system_instruction" o lo passiamo come oggetto testuale
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
-  systemInstruction: "Sei un Dungeon Master fantasy. Guida il giocatore. Sii epico e conciso.",
+  // Proviamo il formato più standard per la versione v1
+  systemInstruction: {
+    role: "system",
+    parts: [{ text: "Sei un Dungeon Master fantasy. Guida il giocatore. Sii epico e conciso." }],
+  },
 }, { apiVersion: 'v1' });
 
 // --- COMPONENTI INTERNI ---
