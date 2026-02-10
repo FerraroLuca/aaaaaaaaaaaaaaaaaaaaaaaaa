@@ -1,27 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+// Recupero chiave
 const API_KEY = import.meta.env.VITE_GEMINI_KEY;
 
-console.log("DEBUG: VERSIONE CODICE 2.0 - ORA USO V1");
+// INIZIALIZZAZIONE PROTETTA
+let genAI = null;
+let model = null;
 
-// Log di debug: apparirà nella console F12 del sito online
-console.log("Versione API caricata. Chiave presente:", !!API_KEY);
-
-const genAI = new GoogleGenerativeAI(API_KEY);
-
-const model = genAI.getGenerativeModel({ 
-  model: "gemini-1.5-flash" 
-}, { apiVersion: 'v1' });
-
-const Menu = ({ onStart }) => (
-  <div className="flex flex-col items-center justify-center h-screen space-y-8 text-center p-6">
-    <h1 className="text-6xl font-bold text-amber-500 fantasy-font drop-shadow-lg">AI Dungeon Master</h1>
-    <button onClick={onStart} className="px-8 py-4 bg-amber-700 hover:bg-amber-600 text-white font-bold rounded-full transition-transform hover:scale-105 shadow-xl">
-      INIZIA L'AVVENTURA
-    </button>
-  </div>
-);
+if (API_KEY) {
+  try {
+    genAI = new GoogleGenerativeAI(API_KEY);
+    model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  } catch (err) {
+    console.error("Errore inizializzazione AI:", err);
+  }
+}
 
 const GameScreen = ({ messages, onAction, loading }) => {
   const [input, setInput] = useState("");
