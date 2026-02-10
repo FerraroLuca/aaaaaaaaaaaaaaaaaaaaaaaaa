@@ -3,6 +3,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const API_KEY = import.meta.env.VITE_GEMINI_KEY;
 
+console.log("DEBUG: VERSIONE CODICE 2.0 - ORA USO V1");
+
 // Log di debug: apparirà nella console F12 del sito online
 console.log("Versione API caricata. Chiave presente:", !!API_KEY);
 
