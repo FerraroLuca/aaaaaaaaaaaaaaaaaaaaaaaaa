@@ -59,15 +59,21 @@ export default function App() {
   const [chat, setChat] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const startGame = async () => {
-    setLoading(true);
-    setStatus('PLAYING');
-    const newChat = model.startChat({ history: [] });
-    setChat(newChat);
-    const result = await newChat.sendMessage("Inizia l'avventura in una taverna.");
-    setMessages([{ role: "model", text: result.response.text() }]);
-    setLoading(false);
-  };
+const startGame = async () => {
+  setLoading(true);
+  setStatus('PLAYING');
+  
+  // Iniziamo la chat senza istruzioni di sistema fisse...
+  const newChat = model.startChat({ history: [] });
+  setChat(newChat);
+  
+  // ...ma le inviamo come "comando segreto" nel primo messaggio!
+  const istruzioneIniziale = "Agisci come Dungeon Master fantasy. Inizia l'avventura in una taverna.";
+  const result = await newChat.sendMessage(istruzioneIniziale);
+  
+  setMessages([{ role: "model", text: result.response.text() }]);
+  setLoading(false);
+};
 
   const handleAction = async (text) => {
     setLoading(true);
