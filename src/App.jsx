@@ -10,10 +10,10 @@ console.log("Versione API caricata. Chiave presente:", !!API_KEY);
 
 const genAI = new GoogleGenerativeAI(API_KEY);
 
-// Riduciamo la configurazione all'osso per non dare scuse a Netlify
+// Metodo ultra-compatibile
 const model = genAI.getGenerativeModel({ 
   model: "gemini-1.5-flash" 
-});
+}, { apiVersion: 'v1' }); // Assicurati che questo sia esattamente così
 const Menu = ({ onStart }) => (
   <div className="flex flex-col items-center justify-center h-screen space-y-8 text-center p-6">
     <h1 className="text-6xl font-bold text-amber-500 fantasy-font drop-shadow-lg">AI Dungeon Master</h1>
