@@ -2,11 +2,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const API_KEY = import.meta.env.VITE_GEMINI_KEY;
+
+// Log di debug: apparirà nella console F12 del sito online
+console.log("Versione API caricata. Chiave presente:", !!API_KEY);
+
 const genAI = new GoogleGenerativeAI(API_KEY);
 
-// CONFIGURAZIONE MINIMALE: solo il nome del modello
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
+// Riduciamo la configurazione all'osso per non dare scuse a Netlify
+const model = genAI.getGenerativeModel({ 
+  model: "gemini-1.5-flash" 
+});
 const Menu = ({ onStart }) => (
   <div className="flex flex-col items-center justify-center h-screen space-y-8 text-center p-6">
     <h1 className="text-6xl font-bold text-amber-500 fantasy-font drop-shadow-lg">AI Dungeon Master</h1>
