@@ -59,23 +59,19 @@ const startGame = async () => {
   setLoading(true);
   setStatus('PLAYING');
   try {
-    // Inizializziamo la chat
-    const newChat = model.startChat({
-      history: [],
-    });
+    const newChat = model.startChat({ history: [] });
     setChat(newChat);
 
-    // Prompt diretto senza istruzioni di sistema complesse
-    const result = await newChat.sendMessage("Sei un Dungeon Master. Inizia l'avventura in una taverna. Parla in italiano.");
+    const result = await newChat.sendMessage("Ciao! Sei un Dungeon Master. Inizia l'avventura.");
     const response = await result.response;
-    const text = response.text();
-    
-    setMessages([{ role: "model", text: text }]);
+    setMessages([{ role: "model", text: response.text() }]);
   } catch (e) {
-    console.error("ERRORE DETTAGLIATO:", e);
-    // Se fallisce ancora, proviamo il metodo 'vecchia scuola'
-    setMessages([{ role: "model", text: "Il portale magico è instabile. Sto ricalibrando..." }]);
-    handleEmergencyStart();
+    console.error("ERRORE:", e);
+    // Invece di chiamare handleEmergencyStart, mostriamo un errore chiaro
+    setMessages([{ 
+      role: "model", 
+      text: "Errore 404: Google non trova il modello. Per favore, genera una NUOVA chiave API su Google AI Studio e aggiornala su Netlify." 
+    }]);
   } finally {
     setLoading(false);
   }
